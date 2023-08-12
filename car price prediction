@@ -1,0 +1,30 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+import warnings
+warnings.filterwarnings("ignore")
+# Load the dataset
+data = pd.read_csv("C:\\Users\\Lenovo\\Downloads\\CarPrice.csv")  
+# Select relevant features and target variable
+features = ['symboling', 'wheelbase', 'carlength', 'carwidth', 'carheight', 'curbweight',
+            'enginesize', 'boreratio', 'stroke', 'compressionratio', 'horsepower', 'peakrpm',
+            'citympg', 'highwaympg']
+target = 'price'
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(data[features], data[target], test_size=0.2, random_state=42)
+# Initialize and train the linear regression model
+model = LinearRegression()
+# Use a context manager to temporarily suppress the warning
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    model.fit(X_train, y_train)
+# Make predictions on the test set
+y_pred = model.predict(X_test)
+# Calculate the Mean Squared Error (MSE) to evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+print(f"Mean Squared Error: {mse:.2f}")
+# Predict the price for a new car using a Numpy array
+new_car_features = [[3, 100, 180, 70, 55, 2500, 150, 3.5, 2.8, 9, 120, 5500, 25, 30]]
+predicted_price = model.predict(new_car_features)
+print(f"Predicted Price for the New Car: {predicted_price[0]:.2f}")
